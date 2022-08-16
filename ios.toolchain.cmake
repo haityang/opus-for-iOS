@@ -131,6 +131,8 @@
 
 cmake_minimum_required(VERSION 3.8.0)
 
+set(IPHONE_VERSION_MIN "9.0" CACHE STRING "IOS minimum os version.")
+
 # CMake invokes the toolchain file twice during the first build, but only once during subsequent rebuilds.
 if(DEFINED ENV{_IOS_TOOLCHAIN_HAS_RUN})
   return()
@@ -780,8 +782,8 @@ if(CMAKE_GENERATOR MATCHES "Xcode")
   message(STATUS "Not setting any manual command-line buildflags, since Xcode is selected as generator.")
 else()
   # Hidden visibility is required for C++ on iOS.
-  set(CMAKE_C_FLAGS "${C_TARGET_FLAGS} ${APPLE_TARGET_TRIPLE_FLAG} ${SDK_NAME_VERSION_FLAGS} ${BITCODE} -fobjc-abi-version=2 ${FOBJC_ARC} ${CMAKE_C_FLAGS}")
-  set(CMAKE_CXX_FLAGS "${C_TARGET_FLAGS} ${APPLE_TARGET_TRIPLE_FLAG} ${SDK_NAME_VERSION_FLAGS} ${BITCODE} ${VISIBILITY} -fobjc-abi-version=2 ${FOBJC_ARC} ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_C_FLAGS "${C_TARGET_FLAGS} ${APPLE_TARGET_TRIPLE_FLAG} ${SDK_NAME_VERSION_FLAGS} ${BITCODE} -fobjc-abi-version=2 ${FOBJC_ARC} ${CMAKE_C_FLAGS} -miphoneos-version-min=${IPHONE_VERSION_MIN}")
+  set(CMAKE_CXX_FLAGS "${C_TARGET_FLAGS} ${APPLE_TARGET_TRIPLE_FLAG} ${SDK_NAME_VERSION_FLAGS} ${BITCODE} ${VISIBILITY} -fobjc-abi-version=2 ${FOBJC_ARC} ${CMAKE_CXX_FLAGS} -miphoneos-version-min=${IPHONE_VERSION_MIN}")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -O0 -g ${CMAKE_CXX_FLAGS_DEBUG}")
   set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS} -DNDEBUG -Os -ffast-math ${CMAKE_CXX_FLAGS_MINSIZEREL}")
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS} -DNDEBUG -O2 -g -ffast-math ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
